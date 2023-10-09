@@ -1,31 +1,39 @@
-import { StyleSheet } from 'react-native';
+import TabOneScreen from './one';
+import TabTwoScreen from './two';
+import TabThreeScreen from './three';
 
-import EditScreenInfo from '../../components/EditScreenInfo';
-import { Text, View } from '../../components/Themed';
+export type TTab = {
+  key: string;
+  title: string;
+  focusedIcon: string;
+  component: any;
+  unfocusedIcon?: string;
+  color?: string;
+  badge?: boolean;
+};
 
-export default function TabOneScreen() {
-  return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Tab One</Text>
-      <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-      <EditScreenInfo path="app/(tabs)/index.tsx" />
-    </View>
-  );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+const Tabs: TTab[] = [
+  {
+    key: 'One',
+    title: 'Tab One',
+    focusedIcon: 'image-album',
+    color: '#6200ee',
+    component: TabOneScreen,
   },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
+  {
+    key: 'library',
+    title: 'Library',
+    focusedIcon: 'inbox',
+    badge: true,
+    unfocusedIcon: 'inbox-outline',
+    component: TabTwoScreen,
   },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: '80%',
+  {
+    key: 'library',
+    title: 'Favorites',
+    focusedIcon: 'heart',
+    unfocusedIcon: 'inbox-outline',
+    component: TabThreeScreen,
   },
-});
+];
+export default Tabs;
