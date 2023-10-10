@@ -4,6 +4,9 @@ import { PaperProvider, MD3LightTheme, MD3DarkTheme } from 'react-native-paper';
 import { SplashScreen, Stack } from 'expo-router';
 import { useEffect, useState } from 'react';
 
+import 'react-native-reanimated';
+import 'react-native-gesture-handler';
+
 export {
   // Catch any errors thrown by the Layout component.
   ErrorBoundary,
