@@ -16,6 +16,8 @@ import { FontAwesome } from '@expo/vector-icons';
 
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 import { MotiView } from 'moti';
+import TabOneScreen from './one';
+import TabTwoScreen from './two';
 
 const MusicRoute = () => {
   return <View>Recents</View>;
@@ -107,31 +109,17 @@ const BottomNavigationExample = () => {
       key: 'music',
       title: 'Favorites',
       focusedIcon: 'heart',
-      unfocusedIcon: 'heart-outline',
     },
     {
       key: 'albums',
       title: 'Albums',
       focusedIcon: 'album',
     },
-    {
-      key: 'recents',
-      title: 'Recents',
-      focusedIcon: 'history',
-    },
-    {
-      key: 'notifications',
-      title: 'Notifications',
-      focusedIcon: 'bell',
-      unfocusedIcon: 'bell-outline',
-    },
   ]);
 
   const renderScene = BottomNavigation.SceneMap({
-    music: MusicRoute,
-    albums: AlbumsRoute,
-    recents: RecentsRoute,
-    notifications: NotificationsRoute,
+    music: TabOneScreen,
+    albums: TabTwoScreen,
   });
 
   return (
