@@ -1,100 +1,37 @@
 import * as React from 'react';
-import {
-  View,
-  Image,
-  Dimensions,
-  StyleSheet,
-  Platform,
-  Easing,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-  Pressable,
-} from 'react-native';
-import { BottomNavigation, Button, Text, useTheme } from 'react-native-paper';
+import { View, StyleSheet, Easing, Animated } from 'react-native';
+import { BottomNavigation, useTheme } from 'react-native-paper';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { FontAwesome } from '@expo/vector-icons';
 
-import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
-import { MotiView } from 'moti';
+import { SafeAreaView } from 'moti';
 import TabOneScreen from './one';
 import TabTwoScreen from './two';
+import Header from '../../components/Header';
 
-const MusicRoute = () => {
-  return <View>Recents</View>;
-};
-
-const AlbumsRoute = () => {
-  const [visible, setVisible] = React.useState(false);
-  function Shape() {
-    return (
-      <MotiView
-        from={{
-          opacity: 0,
-          scale: 0.5,
-        }}
-        animate={{
-          opacity: 1,
-          scale: 1,
-        }}
-        transition={{
-          type: 'timing',
-        }}
-        style={styles.shape}
-      />
-    );
-  }
-
-  const toggle = () => {
-    setVisible(!visible);
-  };
+const ScreenWrapper = ({ children }: { children: React.ReactNode }) => {
+  const scrollY = new Animated.Value(0);
+  const diffClamp = Animated.diffClamp(scrollY, 0, 64);
+  const translateY = diffClamp.interpolate({
+    inputRange: [0, 64],
+    outputRange: [0, -64],
+  });
 
   return (
-    <Pressable onPress={toggle} style={styles.container}>
-      {visible && <Shape />}
-    </Pressable>
-  );
-};
-
-// const AlbumsRoute = () => <View style={{ flex: 1, backgroundColor: 'cyan' }}></View>;
-
-const RecentsRoute = () => <View>Recents</View>;
-
-const NotificationsRoute = () => <View>Notifications</View>;
-
-const TabButton = (props: any) => {
-  const { onPress, accessibilityState, route, theme } = props;
-
-  const focused = accessibilityState.selected;
-  console.log('focused: ', focused);
-
-  return (
-    <TouchableWithoutFeedback onPress={onPress}>
-      <MotiView
-        animate={{
-          width: focused ? '60%' : '10%',
-          backgroundColor: focused ? theme.colors.secondary : 'white',
+    <SafeAreaView style={styles.screen}>
+      <Header translateY={translateY} />
+      <Animated.ScrollView
+        scrollEventThrottle={1}
+        onScroll={(e) => {
+          scrollY.setValue(e.nativeEvent.contentOffset.y);
         }}
-        style={{
-          flexDirection: 'row',
-          height: 50,
+        contentContainerStyle={{
           alignItems: 'center',
-          justifyContent: 'center',
-          borderRadius: 25,
         }}
       >
-        <FontAwesome
-          name={route.focusedIcon}
-          size={24}
-          color={focused ? 'white' : theme.colors.secondary}
-          style={[{ height: 20, width: 20 }]}
-        />
-        {focused && (
-          <Text numberOfLines={1} style={{ marginLeft: 25, color: 'white' }}>
-            {route.title}
-          </Text>
-        )}
-      </MotiView>
-    </TouchableWithoutFeedback>
+        <View style={{ height: 64 }}></View>
+        {children}
+      </Animated.ScrollView>
+    </SafeAreaView>
   );
 };
 
@@ -113,29 +50,37 @@ const BottomNavigationExample = () => {
     {
       key: 'albums',
       title: 'Albums',
-      focusedIcon: 'album',
+      focusedIcon: 'home',
     },
   ]);
 
   const renderScene = BottomNavigation.SceneMap({
-    music: TabOneScreen,
-    albums: TabTwoScreen,
+    music: () => (
+      <ScreenWrapper>
+        <TabOneScreen />
+      </ScreenWrapper>
+    ),
+    albums: () => (
+      <ScreenWrapper>
+        <TabTwoScreen />
+      </ScreenWrapper>
+    ),
   });
 
   return (
-    <View style={styles.screen}>
-      <BottomNavigation
-        safeAreaInsets={{ bottom: insets.bottom }}
-        navigationState={{ index, routes }}
-        onIndexChange={setIndex}
-        // labelMaxFontSizeMultiplier={2}
-        renderScene={renderScene}
-        sceneAnimationEnabled={true}
-        sceneAnimationType="shifting"
-        sceneAnimationEasing={Easing.ease}
-        renderTouchable={(props) => <TabButton {...props} theme={theme} />}
-      />
-    </View>
+    <BottomNavigation
+      safeAreaInsets={{ bottom: insets.bottom }}
+      navigationState={{ index, routes }}
+      onIndexChange={setIndex}
+      labelMaxFontSizeMultiplier={2}
+      renderScene={renderScene}
+      sceneAnimationEnabled={true}
+      sceneAnimationType="shifting"
+      sceneAnimationEasing={Easing.ease}
+      keyboardHidesNavigationBar
+      activeColor={theme.colors.primary}
+      // renderTouchable={(props) => <TabButton {...props} theme={theme} />}
+    />
   );
 };
 
@@ -143,27 +88,7 @@ export default BottomNavigationExample;
 
 const styles = StyleSheet.create({
   screen: {
+    position: 'relative',
     flex: 1,
-  },
-  btn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 8,
-    borderRadius: 16,
-  },
-  shape: {
-    justifyContent: 'center',
-    height: 250,
-    width: 250,
-    borderRadius: 25,
-    marginRight: 10,
-    backgroundColor: 'white',
-  },
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexDirection: 'row',
-    backgroundColor: '#9c1aff',
   },
 });
