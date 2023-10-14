@@ -7,6 +7,7 @@ import { SafeAreaView } from 'moti';
 import TabOneScreen from './one';
 import TabTwoScreen from './two';
 import Header from '../../components/Header';
+import { LinearGradient } from 'expo-linear-gradient';
 
 const ScreenWrapper = ({ children }: { children: React.ReactNode }) => {
   const scrollY = new Animated.Value(0);
@@ -24,11 +25,8 @@ const ScreenWrapper = ({ children }: { children: React.ReactNode }) => {
         onScroll={(e) => {
           scrollY.setValue(e.nativeEvent.contentOffset.y);
         }}
-        contentContainerStyle={{
-          alignItems: 'center',
-        }}
       >
-        <View style={{ height: 64 }}></View>
+        <View style={{ height: 64 }} />
         {children}
       </Animated.ScrollView>
     </SafeAreaView>

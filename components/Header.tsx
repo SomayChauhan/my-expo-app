@@ -1,16 +1,18 @@
 import * as React from 'react';
 import { Animated } from 'react-native';
-import { Appbar } from 'react-native-paper';
+import { Appbar, useTheme } from 'react-native-paper';
 
 interface HeaderProps {
   translateY: Animated.AnimatedInterpolation<string | number>;
 }
 const Header: React.FC<HeaderProps> = ({ translateY }) => {
+  const { colors } = useTheme();
   return (
     <Appbar.Header
       mode={'center-aligned'}
       elevated={true}
       style={{
+        backgroundColor: colors.primaryContainer,
         flexDirection: 'row',
         justifyContent: 'space-around',
         width: '100%',
